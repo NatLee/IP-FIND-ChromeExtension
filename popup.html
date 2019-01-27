@@ -1,14 +1,21 @@
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <link rel="stylesheet" href="css.css">
-<head>
-  <script src="jquery.min.js"></script>
-  <script src="popup.js"></script>
-</head>
+  <head>
+  </head>
 
-<body>
+  <body>
+    <div style='height: 400px; width: 200px;'>
+      <font size='5'><center><b id='myIP'></b></center></font><br>
+      <font size='4'><center><button id='copyBtn'>Copy My IP</button></center></font><br>
 
- 
-</body>
+      <center><input type="text" id='searchIP' placeholder='Input IP you want to search.'></center><br><br>
+      <font size='4'><center><button id='searchBtn'>Search</button></center></font><br>
+      <font size='5'><center><b id='searchIpRegion'></b></center></font><br>
+      <font size='5'><center><b id='searchIpCity'></b></center></font><br>
+    </div>
+  </body>
+
+  <script src='jquery-3.1.1.min.js'></script>
+  <script src='sweetalert2.min.js'></script>
+  <script src='popup.js'></script>
 
 </html>

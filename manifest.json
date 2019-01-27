@@ -5,13 +5,19 @@
   "version": "1.0.3",
   "description": "Find your IP.",
   "permissions": [
-
+    "storage",
+    "clipboardWrite",
+    "clipboardRead" 
   ],
   "browser_action": {
       "default_title": "IP FIND",
       "default_icon": "icon.png",
       "default_popup": "popup.html"
   },
+  "background": {
+    "scripts": [
+    ]
+  },
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://jsonip.com/; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://json.geoiplookup.io/; object-src 'self'"
 }
