@@ -1,8 +1,15 @@
-IP Find
-----
-[![License: GPL v3](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-![demo](./doc/popup.png)
+<div align="center" style="text-align: center">
+<h1>IP Find</h1>
+
+
+<p style="text-align: center">
+  <img align="center" src="./doc/popup.png" alt="frame" width="100%" height="100%">
+</p>
+
+</div>
+
+----
 
 Just one click, find your IP.
 
@@ -13,7 +20,7 @@ Just one click, find your IP.
 
 ## Usage
 
-Install from Chrome extension webstore [link](https://chrome.google.com/webstore/detail/ip-find/mjajkngihnkkbddplmehnaccpkelpeem).
+Install from Chrome extension webstore [here](https://chrome.google.com/webstore/detail/ip-find/mjajkngihnkkbddplmehnaccpkelpeem).
 
 ## Permissions
 
