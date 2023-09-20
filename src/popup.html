@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Extension</title>
+    <style>
+      .container {
+        width: 200px;
+        height: 400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    h1, h2 {
+        font-size: 1.5em;
+        text-align: center;
+    }
+    button {
+        font-size: 1.2em;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    input {
+        width: 100%;
+        padding: 5px;
+    }    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="myIP"></h1>
+        <button id="copyBtn">Copy My IP</button>
+        <input type="text" id="searchIP" placeholder="Input IP you want to search.">
+        <button id="searchBtn">Search</button>
+        <h2 id="searchIpRegion"></h2>
+        <h2 id="searchIpCity"></h2>
+    </div>
+
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
