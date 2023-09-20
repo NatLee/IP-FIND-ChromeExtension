@@ -1,0 +1,21 @@
+
+{
+  "manifest_version": 3,
+  "name": "IP FIND",
+  "version": "1.1",
+  "description": "A simple extension to look up and copy your IP address.",
+  "permissions": ["activeTab", "clipboardWrite", "clipboardRead"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "24": "icons/icon.png"
+    }
+  },
+  "icons": {
+    "24": "icons/icon.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
+
