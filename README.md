@@ -1,7 +1,8 @@
-
-IP-FIND-ChromeExtension
-========
+IP Find
+----
 [![License: GPL v3](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
+![demo](./doc/popup.png)
 
 Just one click, find your IP.
 
