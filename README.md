@@ -69,6 +69,10 @@ openssl genrsa -out key.pem 2048
 
 把 `key.pem` 的完整內容存為 GitHub repo secret `CRX_PRIVATE_KEY`。**這把金鑰決定 extension 的 ID，務必保管好且不要 commit 進 repo。**
 
+## Privacy
+
+The extension does not collect, transmit, or share any personal data. See the full [Privacy Policy](./PRIVACY.md) for details.
+
 ## Contributors
 
 [NatLee](https://github.com/NatLee/), Apple Paul
