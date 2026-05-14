@@ -15,8 +15,13 @@ Just one click, find your IP.
 
 ## Features
 
-- Find your IP.
-- Search IP location.
+- See your current IP (IPv4 / IPv6) with country flag, region, city, ISP and timezone.
+- Look up any IP — get country, region, city, ISP, ASN, timezone, coordinates (with Google Maps link) and postal code.
+- One-click copy for your IP and for any searched IP.
+- Paste from clipboard / Use-my-IP shortcut for quick lookups.
+- Recent search history (last 6) — click to re-query.
+- Light & dark theme, follows system preference and remembers your choice.
+- Zero third-party runtime dependencies — vanilla JS, ~15 KB.
 
 ## Usage
 
