@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read manifest metadata
+        id: meta
+        run: |
+          VERSION=$(jq -r .version src/manifest.json)
+          NAME=$(jq -r .name src/manifest.json | tr '[:upper:] ' '[:lower:]-')
+          BASENAME="${NAME}-v${VERSION}"
+          echo "version=$VERSION"  >> "$GITHUB_OUTPUT"
+          echo "name=$NAME"        >> "$GITHUB_OUTPUT"
+          echo "basename=$BASENAME">> "$GITHUB_OUTPUT"
+          echo "Building $BASENAME"
+
+      - name: Sanity-check tag vs. manifest version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          if [ "$TAG" != "${{ steps.meta.outputs.version }}" ]; then
+            echo "::warning::Git tag ($TAG) does not match manifest version (${{ steps.meta.outputs.version }})."
+          fi
+
+      - name: Build ZIP (for Chrome Web Store upload)
+        run: |
+          cd src
+          zip -r "../${{ steps.meta.outputs.basename }}.zip" . \
+            -x "*.DS_Store" "Thumbs.db" "*.map"
+
+      - name: Detect CRX signing key
+        id: crx_key
+        env:
+          KEY: ${{ secrets.CRX_PRIVATE_KEY }}
+        run: |
+          if [ -n "$KEY" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::CRX_PRIVATE_KEY secret not set — skipping .crx build."
+          fi
+
+      - name: Build CRX (signed)
+        if: steps.crx_key.outputs.available == 'true'
+        env:
+          CRX_PRIVATE_KEY: ${{ secrets.CRX_PRIVATE_KEY }}
+        run: |
+          printf '%s' "$CRX_PRIVATE_KEY" > key.pem
+          npx --yes crx3 \
+            --keyPath key.pem \
+            --crxPath "${{ steps.meta.outputs.basename }}.crx" \
+            src
+          rm -f key.pem
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.basename }}
+          path: |
+            ${{ steps.meta.outputs.basename }}.zip
+            ${{ steps.meta.outputs.basename }}.crx
+          if-no-files-found: ignore
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.meta.outputs.basename }}.zip
+            ${{ steps.meta.outputs.basename }}.crx
+          generate_release_notes: true
+          fail_on_unmatched_files: false

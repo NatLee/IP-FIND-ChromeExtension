@@ -1,10 +1,12 @@
-
 .DS_Store
-
 desktop.ini
+Thumbs.db
 
+# Build output
+dist/
 *.zip
-
-*.pem
-
 *.crx
+
+# Signing keys — NEVER commit
+*.pem
+key.pem
