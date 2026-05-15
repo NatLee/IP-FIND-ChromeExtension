@@ -110,9 +110,8 @@ function setMyInfo({ location, isp, timezone }) {
 }
 
 function formatLocation(data) {
-    const flag = data.country_code ? flagEmoji(data.country_code) + " " : "";
     const parts = [data.city || data.district, data.region, data.country_name].filter(Boolean);
-    return parts.length ? `${flag}${parts.join(", ")}` : "Unknown location";
+    return parts.length ? parts.join(", ") : "Unknown location";
 }
 
 function formatTime(iso) {
@@ -153,30 +152,63 @@ async function searchIP() {
         addToHistory(data);
     } catch (err) {
         console.error("Error fetching IP details:", err);
-        result.innerHTML = '<div class="result-row"><span class="result-val">Lookup failed.</span></div>';
+        result.innerHTML = '<div class="result-line"><span class="result-line-icon">⚠️</span><span class="result-line-text muted">Lookup failed. Please try again.</span></div>';
         showToast("Lookup failed", "error");
     }
 }
 
 function renderResult(data) {
-    const flag = data.country_code ? flagEmoji(data.country_code) : "🌐";
-    const city = data.city || data.district || "—";
-    const region = data.region || "—";
-    const country = data.country_name || "—";
-    const isp = data.isp || data.org || "—";
-    const asn = data.asn ? `${data.asn}${data.asn_org ? " · " + data.asn_org : ""}` : "—";
-    const tz = data.timezone_name || "—";
-    const coords = (data.latitude && data.longitude)
-        ? `${(+data.latitude).toFixed(4)}, ${(+data.longitude).toFixed(4)}`
-        : "";
-    const mapUrl = coords
-        ? `https://www.google.com/maps?q=${data.latitude},${data.longitude}`
-        : "";
+    const ip = data.ip || "";
+    const code = (data.country_code || "").toUpperCase();
+    const ipClass = isIPv6(ip) ? "result-ip is-ipv6" : "result-ip";
+
+    const locParts = [data.city || data.district, data.region, data.country_name].filter(Boolean);
+    const locText = locParts.join(", ");
+
+    const ispName = data.isp || data.org || data.asn_org || "";
+    const asnRaw = data.asn ? String(data.asn).trim() : "";
+    const asnText = asnRaw ? (/^AS/i.test(asnRaw) ? asnRaw : `AS${asnRaw}`) : "";
+    let networkText = "";
+    if (ispName && asnText) networkText = `${ispName} · ${asnText}`;
+    else networkText = ispName || asnText;
+
+    let tzText = data.timezone_name || "";
+    if (tzText && data.current_time) {
+        const t = formatTime(data.current_time);
+        if (t) tzText += ` · ${t}`;
+    }
+
+    const lat = parseFloat(data.latitude);
+    const lng = parseFloat(data.longitude);
+    const hasCoords = Number.isFinite(lat) && Number.isFinite(lng) && (lat !== 0 || lng !== 0);
+    const coords = hasCoords ? `${lat.toFixed(4)}, ${lng.toFixed(4)}` : "";
+    const mapUrl = hasCoords ? `https://www.google.com/maps?q=${lat},${lng}` : "";
+
+    const lines = [];
+    if (locText) lines.push(line("🌍", locText));
+    if (networkText) lines.push(line("🏢", networkText));
+    if (tzText) lines.push(line("🕒", tzText));
+    if (hasCoords) {
+        lines.push(`<div class="result-line">
+            <span class="result-line-icon">📍</span>
+            <a class="result-line-text link" href="${escapeAttr(mapUrl)}" target="_blank" rel="noopener">${escapeHTML(coords)} ↗</a>
+        </div>`);
+    }
+    if (data.postal_code) lines.push(line("📮", `Postal · ${data.postal_code}`));
+
+    if (lines.length === 0) {
+        lines.push(`<div class="result-line">
+            <span class="result-line-icon">ℹ️</span>
+            <span class="result-line-text muted">No additional information available for this IP.</span>
+        </div>`);
+    }
+
+    const badge = code ? `<span class="result-badge">${escapeHTML(code)}</span>` : "";
 
     $("#searchResult").innerHTML = `
         <div class="result-header">
-            <div class="result-ip" id="resultIp">${escapeHTML(data.ip || "")}</div>
-            <span class="result-flag">${flag}</span>
+            <span class="${ipClass}">${escapeHTML(ip)}</span>
+            ${badge}
             <button class="icon-btn" id="copyResultBtn" title="Copy IP">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -184,32 +216,16 @@ function renderResult(data) {
                 </svg>
             </button>
         </div>
-        <div class="result-grid">
-            ${row("Country", `${flag} ${escapeHTML(country)}`)}
-            ${row("Region", escapeHTML(region))}
-            ${row("City", escapeHTML(city))}
-            ${row("ISP", escapeHTML(isp))}
-            ${row("ASN", escapeHTML(asn))}
-            ${row("Timezone", escapeHTML(tz))}
-            ${coords ? coordsRow(mapUrl, coords) : ""}
-            ${data.postal_code ? row("Postal", escapeHTML(data.postal_code)) : ""}
-        </div>
+        <div class="result-rows">${lines.join("")}</div>
     `;
 
-    $("#copyResultBtn").addEventListener("click", () => copyToClipboard(data.ip));
+    $("#copyResultBtn").addEventListener("click", () => copyToClipboard(ip));
 }
 
-function row(key, val) {
-    return `<div class="result-row">
-        <span class="result-key">${key}</span>
-        <span class="result-val">${val}</span>
-    </div>`;
-}
-
-function coordsRow(url, coords) {
-    return `<div class="result-row">
-        <span class="result-key">Coords</span>
-        <a class="result-val link" href="${escapeAttr(url)}" target="_blank" rel="noopener">${escapeHTML(coords)} ↗</a>
+function line(icon, text) {
+    return `<div class="result-line">
+        <span class="result-line-icon">${icon}</span>
+        <span class="result-line-text">${escapeHTML(text)}</span>
     </div>`;
 }
 
@@ -250,10 +266,11 @@ function renderHistory() {
     wrap.classList.remove("hidden");
     list.innerHTML = items
         .map((h) => {
-            const flag = h.country_code ? flagEmoji(h.country_code) : "🌐";
+            const code = (h.country_code || "").toUpperCase();
+            const badge = code ? escapeHTML(code) : "??";
             const loc = [h.city, h.country_name].filter(Boolean).join(", ") || "Unknown";
             return `<div class="history-item" data-ip="${escapeAttr(h.ip)}">
-                <span class="history-flag">${flag}</span>
+                <span class="history-flag">${badge}</span>
                 <span class="history-ip">${escapeHTML(h.ip)}</span>
                 <span class="history-loc">${escapeHTML(loc)}</span>
             </div>`;
@@ -342,13 +359,6 @@ function isIPv6(ip) {
 }
 
 /* ---------- Helpers ---------- */
-
-function flagEmoji(code) {
-    if (!code || code.length !== 2) return "🌐";
-    const base = 0x1f1e6;
-    const cc = code.toUpperCase();
-    return String.fromCodePoint(base + cc.charCodeAt(0) - 65, base + cc.charCodeAt(1) - 65);
-}
 
 function escapeHTML(s) {
     return String(s ?? "").replace(/[&<>"']/g, (c) => ({
