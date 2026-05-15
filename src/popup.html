@@ -10,28 +10,28 @@
     <div class="app">
         <header class="header">
             <div class="brand">
-                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M2 12h20"></path>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M3 12h18"></path>
+                    <path d="M12 3a14 14 0 0 1 4 9 14 14 0 0 1-4 9 14 14 0 0 1-4-9 14 14 0 0 1 4-9z"></path>
                 </svg>
                 <span>IP Find</span>
             </div>
             <button id="themeToggle" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">
-                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="4"></circle>
                     <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
                 </svg>
-                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
             </button>
         </header>
 
-        <section class="card my-ip-card">
-            <div class="card-label">
-                <span class="dot"></span>
-                <span>YOUR IP ADDRESS</span>
+        <section class="section">
+            <div class="section-title">
+                <span class="live-dot"></span>
+                <span>Your IP address</span>
             </div>
 
             <div class="ip-display">
@@ -40,13 +40,13 @@
                 </div>
                 <div class="ip-actions">
                     <button id="copyBtn" class="icon-btn" title="Copy IP" aria-label="Copy IP">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
                     </button>
                     <button id="reloadBtn" class="icon-btn" title="Refresh" aria-label="Refresh">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M23 4v6h-6"></path>
                             <path d="M1 20v-6h6"></path>
                             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
@@ -56,26 +56,19 @@
                 </div>
             </div>
 
-            <div class="info-grid" id="myInfo">
-                <div class="info-row">
-                    <span class="info-icon">🌍</span>
-                    <span class="info-text" data-field="location">—</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-icon">🏢</span>
-                    <span class="info-text" data-field="isp">—</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-icon">🕒</span>
-                    <span class="info-text" data-field="timezone">—</span>
-                </div>
-            </div>
+            <dl class="dl" id="myInfo">
+                <dt>Location</dt>
+                <dd data-field="location">—</dd>
+                <dt>Network</dt>
+                <dd data-field="isp">—</dd>
+                <dt>Timezone</dt>
+                <dd data-field="timezone">—</dd>
+            </dl>
         </section>
 
-        <section class="card">
-            <div class="card-label">
-                <span class="dot dot-search"></span>
-                <span>LOOK UP AN IP</span>
+        <section class="section">
+            <div class="section-title">
+                <span>Look up an IP</span>
             </div>
 
             <div class="search-row">
@@ -83,11 +76,11 @@
                     type="text"
                     id="searchIP"
                     class="input"
-                    placeholder="e.g. 8.8.8.8 or 2001:4860:4860::8888"
+                    placeholder="8.8.8.8 or 2001:4860:4860::8888"
                     autocomplete="off"
                     spellcheck="false"
                 />
-                <button id="searchBtn" class="btn-primary" title="Search">
+                <button id="searchBtn" class="btn-primary" title="Search" aria-label="Search">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.3-4.3"></path>
@@ -95,27 +88,23 @@
                 </button>
             </div>
 
-            <div class="search-hints">
+            <div class="chip-row">
                 <button class="chip" id="pasteBtn" title="Paste from clipboard">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                         <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                     </svg>
                     Paste
                 </button>
                 <button class="chip" id="useMyIpBtn" title="Use my IP">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="22" y1="12" x2="18" y2="12"></line>
-                        <line x1="6" y1="12" x2="2" y2="12"></line>
-                        <line x1="12" y1="6" x2="12" y2="2"></line>
-                        <line x1="12" y1="22" x2="12" y2="18"></line>
-                        <circle cx="12" cy="12" r="2"></circle>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <circle cx="12" cy="12" r="2.5"></circle>
                     </svg>
                     My IP
                 </button>
                 <button class="chip" id="clearHistoryBtn" title="Clear history">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 6h18"></path>
                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
                         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -127,13 +116,13 @@
             <div id="searchResult" class="result hidden"></div>
 
             <div id="historyWrap" class="history hidden">
-                <div class="card-label history-label">RECENT</div>
+                <div class="section-title">Recent</div>
                 <div id="history" class="history-list"></div>
             </div>
         </section>
 
         <footer class="footer">
-            <span>Powered by geoiplookup.io</span>
+            <span>Data from <a href="https://geoiplookup.io" target="_blank" rel="noopener">geoiplookup.io</a></span>
         </footer>
     </div>
 

@@ -152,7 +152,7 @@ async function searchIP() {
         addToHistory(data);
     } catch (err) {
         console.error("Error fetching IP details:", err);
-        result.innerHTML = '<div class="result-line"><span class="result-line-icon">⚠️</span><span class="result-line-text muted">Lookup failed. Please try again.</span></div>';
+        result.innerHTML = '<dl class="dl"><dt>Error</dt><dd class="muted">Lookup failed. Please try again.</dd></dl>';
         showToast("Lookup failed", "error");
     }
 }
@@ -184,24 +184,21 @@ function renderResult(data) {
     const coords = hasCoords ? `${lat.toFixed(4)}, ${lng.toFixed(4)}` : "";
     const mapUrl = hasCoords ? `https://www.google.com/maps?q=${lat},${lng}` : "";
 
-    const lines = [];
-    if (locText) lines.push(line("🌍", locText));
-    if (networkText) lines.push(line("🏢", networkText));
-    if (tzText) lines.push(line("🕒", tzText));
+    const rows = [];
+    if (locText) rows.push(row("Location", escapeHTML(locText)));
+    if (networkText) rows.push(row("Network", escapeHTML(networkText)));
+    if (tzText) rows.push(row("Timezone", escapeHTML(tzText)));
     if (hasCoords) {
-        lines.push(`<div class="result-line">
-            <span class="result-line-icon">📍</span>
-            <a class="result-line-text link" href="${escapeAttr(mapUrl)}" target="_blank" rel="noopener">${escapeHTML(coords)} ↗</a>
-        </div>`);
+        rows.push(row(
+            "Coords",
+            `<a href="${escapeAttr(mapUrl)}" target="_blank" rel="noopener"><span class="mono">${escapeHTML(coords)}</span></a>`
+        ));
     }
-    if (data.postal_code) lines.push(line("📮", `Postal · ${data.postal_code}`));
+    if (data.postal_code) rows.push(row("Postal", `<span class="mono">${escapeHTML(data.postal_code)}</span>`));
 
-    if (lines.length === 0) {
-        lines.push(`<div class="result-line">
-            <span class="result-line-icon">ℹ️</span>
-            <span class="result-line-text muted">No additional information available for this IP.</span>
-        </div>`);
-    }
+    const body = rows.length
+        ? `<dl class="dl">${rows.join("")}</dl>`
+        : `<div class="dl"><dd class="muted">No additional information available for this IP.</dd></div>`;
 
     const badge = code ? `<span class="result-badge">${escapeHTML(code)}</span>` : "";
 
@@ -210,23 +207,20 @@ function renderResult(data) {
             <span class="${ipClass}">${escapeHTML(ip)}</span>
             ${badge}
             <button class="icon-btn" id="copyResultBtn" title="Copy IP">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
             </button>
         </div>
-        <div class="result-rows">${lines.join("")}</div>
+        ${body}
     `;
 
     $("#copyResultBtn").addEventListener("click", () => copyToClipboard(ip));
 }
 
-function line(icon, text) {
-    return `<div class="result-line">
-        <span class="result-line-icon">${icon}</span>
-        <span class="result-line-text">${escapeHTML(text)}</span>
-    </div>`;
+function row(label, valueHTML) {
+    return `<dt>${escapeHTML(label)}</dt><dd>${valueHTML}</dd>`;
 }
 
 /* ---------- History ---------- */
